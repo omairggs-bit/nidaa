@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نداء — صياغة أوامر الذكاء الاصطناعي باحتراف</title>
+<meta name="description" content="نداء منصة عربية لبناء وتنظيم واختبار أوامر الذكاء الاصطناعي (Prompts) لجميع النماذج: ChatGPT وClaude وGemini وMidjourney وغيرها.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%230B0E14'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%23E8A33D' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='8' fill='%23E8A33D'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   نداء — Design System
+   Palette: ink (dark) / paper (light), brass (call) + echo (response)
+   Type: Reem Kufi (display) · IBM Plex Sans Arabic (body) · JetBrains Mono (data)
+   ========================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --brass: #E8A33D;
+  --brass-dim: #C9862B;
+  --echo: #34C6B0;
+  --danger: #E15B5B;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+
+  --font-display: 'Reem Kufi', sans-serif;
+  --font-body: 'IBM Plex Sans Arabic', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --ease: cubic-bezier(.22,.68,.32,1);
+}
+
+/* ---------- Dark theme (default) ---------- */
+[data-theme="dark"] {
+  --bg: #0B0E14;
+  --surface: #12161F;
+  --surface-2: #1B212C;
+  --line: rgba(244,242,237,.09);
+  --text: #F4F2ED;
+  --text-dim: #A7ADBA;
+  --text-faint: #6B7280;
+  --shadow: 0 20px 60px rgba(0,0,0,.45);
+}
+
+/* ---------- Light theme ---------- */
+[data-theme="light"] {
+  --bg: #ECEEF0;
+  --surface: #FFFFFF;
+  --surface-2: #F4F5F7;
+  --line: rgba(11,14,20,.09);
+  --text: #12161F;
+  --text-dim: #545B68;
+  --text-faint: #8A909C;
+  --shadow: 0 20px 50px rgba(20,24,32,.10);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  transition: background .25s var(--ease), color .25s var(--ease);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; margin: 0; }
+
+/* ================= Buttons ================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform .15s var(--ease), background .2s var(--ease), border-color .2s var(--ease), opacity .2s var(--ease);
+  white-space: nowrap;
+}
+.btn:active { transform: scale(.97); }
+.btn--lg { padding: 14px 30px; font-size: 16px; border-radius: var(--radius-md); }
+.btn--sm { padding: 9px 16px; font-size: 13.5px; }
+.btn--brass { background: var(--brass); color: #16130B; }
+.btn--brass:hover { background: var(--brass-dim); }
+.btn--ghost { background: transparent; color: var(--text); border-color: var(--line); }
+.btn--ghost:hover { background: var(--surface-2); }
+
+.icon-btn {
+  width: 38px; height: 38px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--text);
+  cursor: pointer;
+  transition: background .2s var(--ease), transform .2s var(--ease);
+}
+.icon-btn:hover { background: var(--surface); transform: rotate(-12deg); }
+
+/* ================= Topbar ================= */
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar__inner {
+  max-width: 1180px; margin: 0 auto;
+  padding: 14px 28px;
+  display: flex; align-items: center; gap: 28px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand__name { font-family: var(--font-display); font-size: 22px; color: var(--text); }
+.brand--small .brand__name { font-size: 17px; }
+.nav { display: flex; gap: 22px; margin-inline-end: auto; }
+.nav a { text-decoration: none; color: var(--text-dim); font-weight: 500; font-size: 14.5px; transition: color .2s; }
+.nav a:hover { color: var(--brass); }
+.topbar__actions { display: flex; align-items: center; gap: 12px; }
+
+/* ================= Hero ================= */
+.hero {
+  position: relative;
+  padding: 92px 28px 70px;
+  overflow: hidden;
+  text-align: center;
+}
+.hero__rings { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 0; pointer-events: none; }
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--brass) 35%, transparent);
+  animation: pulse 5s var(--ease) infinite;
+}
+.ring--1 { width: 340px; height: 340px; }
+.ring--2 { width: 560px; height: 560px; animation-delay: .6s; }
+.ring--3 { width: 800px; height: 800px; animation-delay: 1.2s; }
+@keyframes pulse {
+  0% { transform: scale(.92); opacity: .55; }
+  70% { transform: scale(1.04); opacity: .12; }
+  100% { transform: scale(1.08); opacity: 0; }
+}
+.hero__inner { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+.hero__eyebrow { color: var(--brass); font-weight: 600; font-size: 14px; letter-spacing: .3px; margin: 0 0 14px; }
+.hero__title { font-size: clamp(56px, 11vw, 108px); line-height: 1; color: var(--text); }
+.hero__title-dot { color: var(--brass); }
+.hero__desc { color: var(--text-dim); font-size: 18px; max-width: 560px; margin: 22px auto 34px; }
+.hero__actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.hero__answers {
+  margin-top: 46px;
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+}
+.answer-chip {
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-dim);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: rise .6s var(--ease) forwards;
+  animation-delay: var(--d);
+}
+@keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+/* ================= Sections ================= */
+main > section { max-width: 1180px; margin: 0 auto; padding: 90px 28px; }
+.section-head { text-align: center; max-width: 560px; margin: 0 auto 44px; }
+.section-head h2 { font-size: 34px; margin-bottom: 10px; }
+.section-head p { color: var(--text-dim); margin: 0; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+}
+
+/* ================= Builder ================= */
+.builder__grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.stepper { list-style: none; display: flex; gap: 4px; padding: 0; margin: 0 0 30px; overflow-x: auto; }
+.stepper__item {
+  flex: 1;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text-faint);
+  border-bottom: 2px solid var(--line);
+  white-space: nowrap;
+  transition: color .2s, border-color .2s;
+}
+.stepper__item span {
+  width: 22px; height: 22px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.stepper__item.is-active { color: var(--text); border-color: var(--brass); }
+.stepper__item.is-active span { background: var(--brass); color: #16130B; }
+.stepper__item.is-done { color: var(--echo); }
+
+.step { display: none; animation: fade .35s var(--ease); }
+.step.is-active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+
+.field-label { display: block; font-weight: 600; margin-bottom: 10px; font-size: 14.5px; }
+.field-hint { color: var(--text-faint); font-size: 12.5px; margin-top: 8px; font-family: var(--font-mono); }
+
+.textarea, .input {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 13px 16px;
+  resize: vertical;
+  transition: border-color .2s;
+}
+.textarea:focus, .input:focus { border-color: var(--brass); }
+
+.model-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.model-card {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: border-color .2s, transform .15s;
+}
+.model-card:hover { transform: translateY(-2px); }
+.model-card.is-active { border-color: var(--brass); color: var(--brass); background: color-mix(in srgb, var(--brass) 10%, var(--surface-2)); }
+.model-card__mono { display: block; font-family: var(--font-mono); font-size: 20px; margin-bottom: 6px; }
+
+.choice-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.choice {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: all .2s;
+}
+.choice.is-active { background: var(--brass); border-color: var(--brass); color: #16130B; font-weight: 600; }
+
+.output-toolbar { display: flex; align-items: center; margin-bottom: 12px; }
+.output-toolbar__spacer { flex: 1; }
+.stat { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-faint); }
+.output-box {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 160px;
+  max-height: 340px;
+  overflow-y: auto;
+  margin: 0;
+}
+.output-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+
+.wizard__nav { display: flex; justify-content: space-between; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); }
+
+.preview { position: sticky; top: 90px; }
+.preview h3 { font-size: 15px; margin-bottom: 14px; color: var(--text-dim); }
+.preview__box {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  min-height: 220px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+.preview__meta { display: flex; justify-content: space-between; margin-top: 12px; font-family: var(--font-mono); font-size: 11.5px; color: var(--text-faint); }
+
+/* ================= Library ================= */
+.library__controls { display: flex; flex-direction: column; gap: 16px; margin-bottom: 30px; }
+.search-box {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  color: var(--text-faint);
+}
+.search-box input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--font-body); font-size: 15px;
+}
+.tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag-chip {
+  padding: 7px 15px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--line);
+  font-size: 13px; color: var(--text-dim); cursor: pointer;
+  transition: all .2s;
+}
+.tag-chip.is-active { background: var(--echo); border-color: var(--echo); color: #06231E; font-weight: 600; }
+
+.template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+.template-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  display: flex; flex-direction: column; gap: 12px;
+  transition: transform .2s var(--ease), border-color .2s;
+}
+.template-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brass) 45%, var(--line)); }
+.template-card__top { display: flex; align-items: center; gap: 12px; }
+.template-card__icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--brass) 16%, var(--surface-2));
+  color: var(--brass); font-size: 18px; flex-shrink: 0;
+}
+.template-card__title { font-weight: 700; font-size: 15.5px; }
+.template-card__desc { color: var(--text-dim); font-size: 13.5px; flex: 1; margin: 0; }
+.template-card__meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-faint); font-family: var(--font-mono); }
+.template-card__tag { background: var(--surface-2); padding: 3px 10px; border-radius: 999px; }
+.template-card__footer { display: flex; gap: 8px; }
+
+/* ================= History ================= */
+.history__tabs { display: flex; gap: 10px; margin-bottom: 22px; align-items: center; }
+.tab {
+  padding: 9px 20px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--line);
+  color: var(--text-dim); cursor: pointer; font-size: 14px; font-family: var(--font-body);
+}
+.tab.is-active { background: var(--brass); border-color: var(--brass); color: #16130B; font-weight: 600; }
+.history-list { display: flex; flex-direction: column; gap: 12px; }
+.history-item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  display: flex; align-items: center; gap: 16px;
+}
+.history-item__snippet {
+  flex: 1; font-family: var(--font-mono); font-size: 12.5px; color: var(--text-dim);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.history-item__model { font-size: 11.5px; color: var(--brass); font-family: var(--font-mono); flex-shrink: 0; }
+.history-item__date { font-size: 11px; color: var(--text-faint); flex-shrink: 0; font-family: var(--font-mono); }
+.history-item__actions { display: flex; gap: 6px; flex-shrink: 0; }
+.icon-sm-btn {
+  width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--surface-2); color: var(--text-dim); cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; transition: color .2s, border-color .2s;
+}
+.icon-sm-btn:hover { color: var(--brass); border-color: var(--brass); }
+.empty-state { text-align: center; color: var(--text-faint); padding: 40px 0; }
+
+/* ================= Footer ================= */
+.footer { border-top: 1px solid var(--line); padding: 34px 28px; }
+.footer__inner { max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; color: var(--text-faint); font-size: 13px; }
+.footer__inner .brand__name { font-size: 15px; }
+.shortcuts { font-family: var(--font-mono); margin-inline-start: auto; }
+
+/* ================= Toast ================= */
+.toast {
+  position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--surface); border: 1px solid var(--brass);
+  color: var(--text); padding: 12px 24px; border-radius: 999px;
+  font-size: 14px; box-shadow: var(--shadow);
+  opacity: 0; pointer-events: none; transition: all .3s var(--ease);
+  z-index: 100;
+}
+.toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ================= Responsive ================= */
+@media (max-width: 860px) {
+  .builder__grid { grid-template-columns: 1fr; }
+  .preview { position: static; }
+  .model-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav { display: none; }
+}
+@media (max-width: 520px) {
+  .hero { padding: 70px 20px 50px; }
+  main > section { padding: 60px 18px; }
+  .model-grid { grid-template-columns: repeat(2, 1fr); }
+  .output-actions { flex-direction: column; }
+  .output-actions .btn { width: 100%; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ===== شريط علوي ===== -->
+<header class="topbar">
+  <div class="topbar__inner">
+    <a href="#top" class="brand">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="30" height="30">
+          <circle cx="20" cy="20" r="18" fill="none" stroke="var(--brass)" stroke-width="2.5" opacity="0.9"/>
+          <circle cx="20" cy="20" r="11" fill="none" stroke="var(--brass)" stroke-width="2.5" opacity="0.55"/>
+          <circle cx="20" cy="20" r="4.5" fill="var(--brass)"/>
+        </svg>
+      </span>
+      <span class="brand__name">نداء</span>
+    </a>
+
+    <nav class="nav" aria-label="التنقل الرئيسي">
+      <a href="#builder">المُنشئ</a>
+      <a href="#library">المكتبة</a>
+      <a href="#history">السجل</a>
+    </nav>
+
+    <div class="topbar__actions">
+      <button class="icon-btn" id="themeToggle" title="تبديل الوضع الليلي/النهاري (Ctrl+D)" aria-label="تبديل المظهر">
+        <svg id="iconMoon" viewBox="0 0 24 24" width="19" height="19"><path fill="currentColor" d="M20.7 15.6a8.6 8.6 0 0 1-10.3-10.3.7.7 0 0 0-.9-.9A9.9 9.9 0 1 0 21.6 16.5a.7.7 0 0 0-.9-.9Z"/></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" width="19" height="19" style="display:none"><path fill="currentColor" d="M12 5a1 1 0 0 1-1-1V2a1 1 0 0 1 2 0v2a1 1 0 0 1-1 1Zm0 16a1 1 0 0 1-1-1v-2a1 1 0 0 1 2 0v2a1 1 0 0 1-1 1Zm9-9a1 1 0 0 1-1 1h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1ZM6 12a1 1 0 0 1-1 1H3a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1Zm11.7-6.7a1 1 0 0 1 0 1.4l-1.4 1.4a1 1 0 1 1-1.4-1.4l1.4-1.4a1 1 0 0 1 1.4 0Zm-11 11a1 1 0 0 1 0 1.4l-1.4 1.4a1 1 0 0 1-1.4-1.4l1.4-1.4a1 1 0 0 1 1.4 0Zm11 1.4a1 1 0 0 1-1.4 0l-1.4-1.4a1 1 0 1 1 1.4-1.4l1.4 1.4a1 1 0 0 1 0 1.4ZM6.7 6.7a1 1 0 0 1-1.4 0L3.9 5.3a1 1 0 0 1 1.4-1.4l1.4 1.4a1 1 0 0 1 0 1.4ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"/></svg>
+      </button>
+      <a href="#builder" class="btn btn--brass btn--sm">ابدأ الآن</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===== قسم البطل: النداء والصدى ===== -->
+  <section class="hero">
+    <div class="hero__rings" aria-hidden="true">
+      <span class="ring ring--1"></span>
+      <span class="ring ring--2"></span>
+      <span class="ring ring--3"></span>
+    </div>
+
+    <div class="hero__inner">
+      <p class="hero__eyebrow">منصة عربية لصياغة أوامر الذكاء الاصطناعي</p>
+      <h1 class="hero__title">نـــداء<span class="hero__title-dot">.</span></h1>
+      <p class="hero__desc">
+        اكتب فكرتك مرّة واحدة… ودَع «نداء» يحوّلها إلى أمر احترافي مضبوط لكل نموذج ذكاء اصطناعي تستخدمه.
+        نداء واحد، وإجابات من كل مكان.
+      </p>
+
+      <div class="hero__actions">
+        <a href="#builder" class="btn btn--brass btn--lg">ابدأ الآن</a>
+        <a href="#library" class="btn btn--ghost btn--lg">استكشف المكتبة</a>
+      </div>
+
+      <div class="hero__answers" role="list" aria-label="نماذج الذكاء الاصطناعي المدعومة">
+        <span class="answer-chip" style="--d:.05s" role="listitem">ChatGPT</span>
+        <span class="answer-chip" style="--d:.15s" role="listitem">Claude</span>
+        <span class="answer-chip" style="--d:.25s" role="listitem">Gemini</span>
+        <span class="answer-chip" style="--d:.35s" role="listitem">Grok</span>
+        <span class="answer-chip" style="--d:.45s" role="listitem">Copilot</span>
+        <span class="answer-chip" style="--d:.55s" role="listitem">DeepSeek</span>
+        <span class="answer-chip" style="--d:.65s" role="listitem">Midjourney</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== قسم المُنشئ (المعالج) ===== -->
+  <section id="builder" class="builder">
+    <div class="section-head">
+      <h2>المُنشئ</h2>
+      <p>ستّ خطوات قصيرة تفصلك عن أمر جاهز واحترافي.</p>
+    </div>
+
+    <div class="builder__grid">
+
+      <!-- المعالج -->
+      <div class="wizard card">
+        <ol class="stepper" id="stepper">
+          <li class="stepper__item is-active" data-step="1"><span>١</span>الفكرة</li>
+          <li class="stepper__item" data-step="2"><span>٢</span>النموذج</li>
+          <li class="stepper__item" data-step="3"><span>٣</span>الجمهور</li>
+          <li class="stepper__item" data-step="4"><span>٤</span>اللغة</li>
+          <li class="stepper__item" data-step="5"><span>٥</span>الاحترافية</li>
+          <li class="stepper__item" data-step="6"><span>٦</span>الناتج</li>
+        </ol>
+
+        <!-- خطوة 1 -->
+        <div class="step is-active" data-step="1">
+          <label class="field-label" for="ideaInput">ما هي فكرتك أو مهمتك؟</label>
+          <textarea id="ideaInput" class="textarea" rows="5" placeholder="مثال: أريد خطة محتوى لحساب إنستغرام يبيع القهوة المختصة..."></textarea>
+          <div class="field-hint"><span id="ideaCount">0</span> كلمة</div>
+        </div>
+
+        <!-- خطوة 2 -->
+        <div class="step" data-step="2">
+          <label class="field-label">اختر النموذج المستهدف</label>
+          <div class="model-grid" id="modelGrid"></div>
+        </div>
+
+        <!-- خطوة 3 -->
+        <div class="step" data-step="3">
+          <label class="field-label" for="audienceInput">من هو الجمهور المستهدف؟ (اختياري)</label>
+          <input id="audienceInput" class="input" type="text" placeholder="مثال: أصحاب المشاريع الصغيرة، مبرمجون مبتدئون...">
+          <label class="field-label" for="goalInput" style="margin-top:16px">ما الهدف النهائي من الأمر؟ (اختياري)</label>
+          <input id="goalInput" class="input" type="text" placeholder="مثال: الحصول على خطة قابلة للتنفيذ خلال أسبوع">
+        </div>
+
+        <!-- خطوة 4 -->
+        <div class="step" data-step="4">
+          <label class="field-label">لغة الأمر الناتج</label>
+          <div class="choice-row" id="langChoice">
+            <button class="choice is-active" data-lang="ar">العربية</button>
+            <button class="choice" data-lang="en">الإنجليزية</button>
+          </div>
+        </div>
+
+        <!-- خطوة 5 -->
+        <div class="step" data-step="5">
+          <label class="field-label">مستوى الاحترافية والتفصيل</label>
+          <div class="choice-row" id="levelChoice">
+            <button class="choice" data-level="basic">مباشر</button>
+            <button class="choice is-active" data-level="pro">احترافي</button>
+            <button class="choice" data-level="expert">خبير</button>
+          </div>
+          <p class="field-hint" id="levelDesc">يضيف هيكلاً كاملاً: الدور، السياق، القيود، وصيغة الإخراج.</p>
+        </div>
+
+        <!-- خطوة 6 -->
+        <div class="step" data-step="6">
+          <div class="output-toolbar">
+            <button class="btn btn--ghost btn--sm" id="enhanceBtn">✨ تحسين الأمر</button>
+            <div class="output-toolbar__spacer"></div>
+            <span class="stat" id="outCount">0 كلمة</span>
+          </div>
+          <pre class="output-box" id="outputBox" dir="auto"></pre>
+          <div class="output-actions">
+            <button class="btn btn--brass btn--sm" id="copyBtn">نسخ</button>
+            <button class="btn btn--ghost btn--sm" id="favBtn">♡ إضافة للمفضلة</button>
+            <button class="btn btn--ghost btn--sm" id="exportJsonBtn">تصدير JSON</button>
+            <button class="btn btn--ghost btn--sm" id="exportTxtBtn">تصدير TXT</button>
+          </div>
+        </div>
+
+        <div class="wizard__nav">
+          <button class="btn btn--ghost btn--sm" id="prevStep">السابق</button>
+          <button class="btn btn--brass btn--sm" id="nextStep">التالي</button>
+        </div>
+      </div>
+
+      <!-- معاينة حية -->
+      <aside class="preview card">
+        <h3>معاينة حية</h3>
+        <pre class="preview__box" id="livePreview" dir="auto">ابدأ بكتابة فكرتك لترى المعاينة هنا...</pre>
+        <div class="preview__meta">
+          <span id="previewModel">النموذج: —</span>
+          <span id="previewWords">0 كلمة</span>
+          <span id="previewChars">0 رمز</span>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- ===== قسم المكتبة ===== -->
+  <section id="library" class="library">
+    <div class="section-head">
+      <h2>المكتبة</h2>
+      <p>قوالب جاهزة، اختر واحدًا وسنحمّله مباشرة في المُنشئ.</p>
+    </div>
+
+    <div class="library__controls">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.8l-.3-.3a6.5 6.5 0 1 0-.7.7l.3.3v.8l5 5 1.5-1.5-5-5Zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z"/></svg>
+        <input type="text" id="searchInput" placeholder="ابحث في المكتبة… (Ctrl+K)" aria-label="بحث">
+      </div>
+      <div class="tag-row" id="tagRow"></div>
+    </div>
+
+    <div class="template-grid" id="templateGrid"></div>
+  </section>
+
+  <!-- ===== قسم السجل ===== -->
+  <section id="history" class="history">
+    <div class="section-head">
+      <h2>السجل والمفضلة</h2>
+      <p>كل الأوامر التي أنشأتها محفوظة محليًا في متصفحك.</p>
+    </div>
+
+    <div class="history__tabs">
+      <button class="tab is-active" data-tab="history">السجل</button>
+      <button class="tab" data-tab="favorites">المفضلة</button>
+      <button class="btn btn--ghost btn--sm" id="clearHistoryBtn" style="margin-inline-start:auto">مسح الكل</button>
+    </div>
+
+    <div class="history-list" id="historyList" data-view="history"></div>
+    <p class="empty-state" id="emptyState" hidden>لا توجد عناصر بعد.</p>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <span class="brand brand--small"><span class="brand__mark">
+      <svg viewBox="0 0 40 40" width="20" height="20"><circle cx="20" cy="20" r="18" fill="none" stroke="var(--brass)" stroke-width="2.5" opacity="0.9"/><circle cx="20" cy="20" r="4.5" fill="var(--brass)"/></svg>
+    </span> نداء</span>
+    <p>جميع بياناتك تُحفظ محليًا في متصفحك فقط، ولا تُرسل لأي خادم.</p>
+    <p class="shortcuts">Ctrl+K بحث · Ctrl+Enter توليد · Ctrl+D المظهر</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   نداء — Application Logic (Vanilla ES6, no dependencies)
+   All data persists locally via localStorage. Nothing leaves the browser.
+   ========================================================= */
+
+(() => {
+  'use strict';
+
+  /* ---------------- Storage helpers ---------------- */
+  const STORE = {
+    theme: 'nidaa_theme',
+    favorites: 'nidaa_favorites',
+    history: 'nidaa_history',
+  };
+
+  const load = (key, fallback) => {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch { return fallback; }
+  };
+  const save = (key, value) => {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* storage full/blocked */ }
+  };
+
+  /* ---------------- Models ---------------- */
+  const MODELS = [
+    { id: 'chatgpt',    label: 'ChatGPT',    mono: 'GPT' },
+    { id: 'claude',     label: 'Claude',     mono: 'CL' },
+    { id: 'gemini',     label: 'Gemini',     mono: 'GM' },
+    { id: 'grok',       label: 'Grok',       mono: 'GK' },
+    { id: 'copilot',    label: 'Copilot',    mono: 'CP' },
+    { id: 'deepseek',   label: 'DeepSeek',   mono: 'DS' },
+    { id: 'midjourney', label: 'Midjourney', mono: 'MJ' },
+    { id: 'flux',       label: 'Flux',       mono: 'FX' },
+    { id: 'veo',        label: 'Veo',        mono: 'VO' },
+  ];
+
+  const LEVEL_DESC = {
+    basic:  'أمر مختصر ومباشر بدون تنسيقات إضافية.',
+    pro:    'يضيف هيكلاً كاملاً: الدور، السياق، القيود، وصيغة الإخراج.',
+    expert: 'هيكل خبير كامل مع أمثلة وتعليمات دقيقة خطوة بخطوة.',
+  };
+
+  /* ---------------- Template Library ---------------- */
+  const TEMPLATES = [
+    { id:'t1', icon:'✍️', title:'مقال مدونة SEO', tag:'كتابة', model:'chatgpt', uses:482, rating:4.8,
+      desc:'مقال مدونة محسّن لمحركات البحث بعنوان جذاب وفقرات منظمة.',
+      idea:'اكتب مقال مدونة عن فوائد شرب الماء بكمية كافية يوميًا، مع عنوان جذاب وفقرات فرعية.' },
+    { id:'t2', icon:'💻', title:'مراجعة كود برمجي', tag:'برمجة', model:'claude', uses:611, rating:4.9,
+      desc:'مراجعة شاملة للكود مع اقتراحات لتحسين الأداء وسلامة الأخطاء.',
+      idea:'راجع الكود التالي وابحث عن الأخطاء المحتملة واقترح تحسينات على الأداء وقابلية القراءة.' },
+    { id:'t3', icon:'🎨', title:'صورة منتج احترافية', tag:'تصميم', model:'midjourney', uses:355, rating:4.7,
+      desc:'وصف بصري دقيق لإنتاج صورة منتج بإضاءة استوديو احترافية.',
+      idea:'صورة منتج لعطر فاخر على منصة رخامية سوداء مع إضاءة استوديو ناعمة وخلفية داكنة، تصوير احترافي.' },
+    { id:'t4', icon:'📊', title:'خطة تسويقية أسبوعية', tag:'تسويق', model:'gemini', uses:274, rating:4.6,
+      desc:'خطة محتوى أسبوعية لمنصات التواصل الاجتماعي بجدول زمني واضح.',
+      idea:'ضع خطة محتوى أسبوعية لحساب إنستغرام يبيع القهوة المختصة تتضمن أفكار منشورات ومواعيد نشر.' },
+    { id:'t5', icon:'🔍', title:'بحث ومقارنة معمّقة', tag:'بحث', model:'chatgpt', uses:198, rating:4.5,
+      desc:'تحليل مقارن منظم بين خيارات متعددة مع جدول ملخص.',
+      idea:'قارن بين ثلاثة أنواع من البطاريات القابلة لإعادة الشحن من حيث العمر والتكلفة والأداء.' },
+    { id:'t6', icon:'🌐', title:'ترجمة مع الحفاظ على النبرة', tag:'ترجمة', model:'claude', uses:410, rating:4.9,
+      desc:'ترجمة دقيقة تحافظ على أسلوب النص الأصلي ونبرته.',
+      idea:'ترجم النص التالي من الإنجليزية إلى العربية مع الحفاظ على النبرة الرسمية والمصطلحات التقنية.' },
+    { id:'t7', icon:'📝', title:'تلخيص تقرير طويل', tag:'تلخيص', model:'deepseek', uses:322, rating:4.6,
+      desc:'تلخيص نقاط تقرير طويل في نقاط رئيسية قابلة للمسح السريع.',
+      idea:'لخّص التقرير التالي في خمس نقاط رئيسية مع الحفاظ على الأرقام والحقائق المهمة.' },
+    { id:'t8', icon:'🎬', title:'مشهد فيديو قصير', tag:'فيديو', model:'veo', uses:150, rating:4.4,
+      desc:'وصف مشهد سينمائي قصير لإنتاج فيديو بالذكاء الاصطناعي.',
+      idea:'مشهد سينمائي: مدينة مستقبلية عند الغروب، طائرات صغيرة تحلق بين ناطحات السحاب، حركة كاميرا بطيئة.' },
+    { id:'t9', icon:'🧩', title:'حل مشكلة برمجية', tag:'برمجة', model:'copilot', uses:267, rating:4.7,
+      desc:'تشخيص خطأ برمجي واقتراح حل خطوة بخطوة.',
+      idea:'لدي خطأ في تطبيق React عند تحديث الحالة، ساعدني في تشخيص السبب واقتراح حل.' },
+  ];
+
+  /* ---------------- State ---------------- */
+  const state = {
+    step: 1,
+    model: 'chatgpt',
+    lang: 'ar',
+    level: 'pro',
+    activeTag: null,
+    historyView: 'history',
+  };
+
+  /* ---------------- DOM refs ---------------- */
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+  const ideaInput = $('#ideaInput');
+  const audienceInput = $('#audienceInput');
+  const goalInput = $('#goalInput');
+  const ideaCount = $('#ideaCount');
+  const modelGrid = $('#modelGrid');
+  const langChoice = $('#langChoice');
+  const levelChoice = $('#levelChoice');
+  const levelDesc = $('#levelDesc');
+  const outputBox = $('#outputBox');
+  const outCount = $('#outCount');
+  const livePreview = $('#livePreview');
+  const previewModel = $('#previewModel');
+  const previewWords = $('#previewWords');
+  const previewChars = $('#previewChars');
+  const stepper = $('#stepper');
+  const toast = $('#toast');
+
+  /* ---------------- Toast ---------------- */
+  let toastTimer = null;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('is-visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2200);
+  }
+
+  /* ---------------- Theme ---------------- */
+  function initTheme() {
+    const saved = load(STORE.theme, 'dark');
+    document.documentElement.setAttribute('data-theme', saved);
+    syncThemeIcon(saved);
+  }
+  function syncThemeIcon(theme) {
+    $('#iconMoon').style.display = theme === 'dark' ? 'block' : 'none';
+    $('#iconSun').style.display = theme === 'light' ? 'block' : 'none';
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    syncThemeIcon(next);
+    save(STORE.theme, next);
+  }
+  $('#themeToggle').addEventListener('click', toggleTheme);
+
+  /* ---------------- Word/char counting ---------------- */
+  const countWords = (str) => (str.trim().match(/\S+/g) || []).length;
+
+  /* ---------------- Prompt generation ---------------- */
+  function buildPrompt({ idea, audience, goal, model, lang, level, enhanced }) {
+    const modelLabel = MODELS.find(m => m.id === model)?.label || model;
+    const isVisual = ['midjourney', 'flux', 'veo'].includes(model);
+    const L = lang === 'en';
+
+    if (isVisual) {
+      // Visual/generative models: compact parameter-style prompt
+      const bits = [idea.trim()];
+      if (audience) bits.push(audience.trim());
+      let out = bits.filter(Boolean).join(', ');
+      if (level !== 'basic') out += L ? ', highly detailed, professional lighting, sharp focus' : '، تفاصيل دقيقة، إضاءة احترافية، تركيز حاد';
+      if (model === 'midjourney') out += ' --ar 16:9 --v 6';
+      if (model === 'flux') out += ' | style: photorealistic | quality: high';
+      if (model === 'veo') out += L ? ' | camera: slow dolly-in | duration: 8s' : ' | حركة الكاميرا: تقدم بطيء | المدة: ٨ ثوانٍ';
+      return out;
+    }
+
+    if (level === 'basic') {
+      return L
+        ? `${idea.trim()}${audience ? `\nAudience: ${audience}` : ''}${goal ? `\nGoal: ${goal}` : ''}`
+        : `${idea.trim()}${audience ? `\nالجمهور المستهدف: ${audience}` : ''}${goal ? `\nالهدف: ${goal}` : ''}`;
+    }
+
+    const persona = L
+      ? `You are an expert assistant working with ${modelLabel}. Respond with precision and a professional tone.`
+      : `أنت مساعد خبير تتعامل مع نموذج ${modelLabel}. أجب بدقة وبأسلوب احترافي.`;
+
+    const sections = [];
+    sections.push(`# ${L ? 'Role' : 'الدور'}\n${persona}`);
+    sections.push(`# ${L ? 'Task' : 'المهمة'}\n${idea.trim()}`);
+    if (audience) sections.push(`# ${L ? 'Audience' : 'الجمهور المستهدف'}\n${audience.trim()}`);
+    if (goal) sections.push(`# ${L ? 'Goal' : 'الهدف النهائي'}\n${goal.trim()}`);
+
+    if (level === 'expert') {
+      sections.push(`# ${L ? 'Context' : 'السياق'}\n${L ? 'Consider best practices and current standards in this domain before answering.' : 'خذ بعين الاعتبار أفضل الممارسات والمعايير الحديثة في هذا المجال قبل الإجابة.'}`);
+      sections.push(`# ${L ? 'Constraints' : 'القيود'}\n${L ? '- Be concise but complete\n- Avoid unnecessary repetition\n- State assumptions explicitly' : '- كن مختصرًا وشاملاً في آن واحد\n- تجنّب التكرار غير الضروري\n- اذكر أي افتراضات بوضوح'}`);
+      sections.push(`# ${L ? 'Output format' : 'صيغة الإخراج'}\n${L ? 'Structured sections with clear headings. Use lists where helpful.' : 'أقسام منظمة بعناوين واضحة، مع استخدام القوائم عند الحاجة.'}`);
+      sections.push(`# ${L ? 'Example' : 'مثال توضيحي'}\n${L ? '(Provide one short example of the expected style before the full answer.)' : '(قدّم مثالاً قصيرًا واحدًا يوضح الأسلوب المطلوب قبل الإجابة الكاملة.)'}`);
+    } else {
+      sections.push(`# ${L ? 'Constraints' : 'القيود'}\n${L ? 'Be clear, structured, and avoid filler.' : 'كن واضحًا ومنظمًا وتجنّب الحشو.'}`);
+      sections.push(`# ${L ? 'Output format' : 'صيغة الإخراج'}\n${L ? 'Well-structured response with headings if relevant.' : 'إجابة منظمة بعناوين إن لزم الأمر.'}`);
+    }
+
+    let prompt = sections.join('\n\n');
+    if (enhanced) {
+      prompt += `\n\n# ${L ? 'Note' : 'ملاحظة'}\n${L ? 'This prompt was auto-enhanced by Nidaa with a full PCTF structure (Persona, Context, Task, Format).' : 'تم تحسين هذا الأمر تلقائيًا عبر نداء وفق هيكل كامل (الدور، السياق، المهمة، صيغة الإخراج).'}`;
+    }
+    return prompt;
+  }
+
+  function currentInputs(enhanced = false) {
+    return {
+      idea: ideaInput.value || '',
+      audience: audienceInput.value || '',
+      goal: goalInput.value || '',
+      model: state.model,
+      lang: state.lang,
+      level: state.level,
+      enhanced,
+    };
+  }
+
+  function updateLivePreview() {
+    const inputs = currentInputs();
+    if (!inputs.idea.trim()) {
+      livePreview.textContent = 'ابدأ بكتابة فكرتك لترى المعاينة هنا...';
+      previewModel.textContent = `النموذج: ${MODELS.find(m => m.id === state.model)?.label || '—'}`;
+      previewWords.textContent = '0 كلمة';
+      previewChars.textContent = '0 رمز';
+      return;
+    }
+    const text = buildPrompt(inputs);
+    livePreview.textContent = text;
+    previewModel.textContent = `النموذج: ${MODELS.find(m => m.id === state.model)?.label || '—'}`;
+    previewWords.textContent = `${countWords(text)} كلمة`;
+    previewChars.textContent = `${text.length} رمز`;
+  }
+
+  /* ---------------- Model grid ---------------- */
+  function renderModelGrid() {
+    modelGrid.innerHTML = MODELS.map(m => `
+      <button class="model-card ${m.id === state.model ? 'is-active' : ''}" data-model="${m.id}" type="button">
+        <span class="model-card__mono">${m.mono}</span>${m.label}
+      </button>
+    `).join('');
+    $$('.model-card', modelGrid).forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.model = btn.dataset.model;
+        renderModelGrid();
+        updateLivePreview();
+      });
+    });
+  }
+
+  /* ---------------- Wizard navigation ---------------- */
+  function goToStep(n) {
+    state.step = Math.min(6, Math.max(1, n));
+    $$('.step').forEach(el => el.classList.toggle('is-active', Number(el.dataset.step) === state.step));
+    $$('.stepper__item').forEach(el => {
+      const s = Number(el.dataset.step);
+      el.classList.toggle('is-active', s === state.step);
+      el.classList.toggle('is-done', s < state.step);
+    });
+    $('#prevStep').disabled = state.step === 1;
+    $('#nextStep').textContent = state.step === 6 ? 'تم' : 'التالي';
+    if (state.step === 6) generateOutput();
+  }
+
+  $('#nextStep').addEventListener('click', () => {
+    if (state.step === 1 && !ideaInput.value.trim()) {
+      showToast('اكتب فكرتك أولاً');
+      ideaInput.focus();
+      return;
+    }
+    if (state.step === 6) { goToStep(1); return; }
+    goToStep(state.step + 1);
+  });
+  $('#prevStep').addEventListener('click', () => goToStep(state.step - 1));
+  $$('.stepper__item').forEach(el => el.addEventListener('click', () => goToStep(Number(el.dataset.step))));
+
+  /* ---------------- Step 4 & 5 choices ---------------- */
+  langChoice.addEventListener('click', (e) => {
+    const btn = e.target.closest('.choice');
+    if (!btn) return;
+    state.lang = btn.dataset.lang;
+    $$('.choice', langChoice).forEach(b => b.classList.toggle('is-active', b === btn));
+    updateLivePreview();
+  });
+  levelChoice.addEventListener('click', (e) => {
+    const btn = e.target.closest('.choice');
+    if (!btn) return;
+    state.level = btn.dataset.level;
+    $$('.choice', levelChoice).forEach(b => b.classList.toggle('is-active', b === btn));
+    levelDesc.textContent = LEVEL_DESC[state.level];
+    updateLivePreview();
+  });
+
+  /* ---------------- Output (step 6) ---------------- */
+  let lastGenerated = '';
+  function generateOutput(enhanced = false) {
+    const inputs = currentInputs(enhanced);
+    if (!inputs.idea.trim()) {
+      outputBox.textContent = 'أدخل فكرتك في الخطوة الأولى أولاً.';
+      outCount.textContent = '0 كلمة';
+      return;
+    }
+    lastGenerated = buildPrompt(inputs);
+    outputBox.textContent = lastGenerated;
+    outCount.textContent = `${countWords(lastGenerated)} كلمة`;
+    pushHistory(inputs, lastGenerated);
+  }
+  $('#enhanceBtn').addEventListener('click', () => {
+    generateOutput(true);
+    showToast('تم تحسين الأمر ✨');
+  });
+
+  $('#copyBtn').addEventListener('click', async () => {
+    if (!lastGenerated) return;
+    try {
+      await navigator.clipboard.writeText(lastGenerated);
+      showToast('تم النسخ إلى الحافظة');
+    } catch {
+      showToast('تعذّر النسخ، حاول يدويًا');
+    }
+  });
+
+  $('#exportJsonBtn').addEventListener('click', () => {
+    if (!lastGenerated) return;
+    downloadFile('nidaa-prompt.json', JSON.stringify({
+      idea: ideaInput.value, model: state.model, lang: state.lang, level: state.level,
+      prompt: lastGenerated, createdAt: new Date().toISOString(),
+    }, null, 2), 'application/json');
+  });
+  $('#exportTxtBtn').addEventListener('click', () => {
+    if (!lastGenerated) return;
+    downloadFile('nidaa-prompt.txt', lastGenerated, 'text/plain');
+  });
+  function downloadFile(name, content, type) {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    showToast('تم التصدير');
+  }
+
+  $('#favBtn').addEventListener('click', () => {
+    if (!lastGenerated) return;
+    const favs = load(STORE.favorites, []);
+    favs.unshift({ id: 'f' + Date.now(), prompt: lastGenerated, model: state.model, date: new Date().toISOString() });
+    save(STORE.favorites, favs.slice(0, 100));
+    showToast('أُضيف إلى المفضلة ♥');
+    renderHistoryList();
+  });
+
+  /* ---------------- Idea word counter ---------------- */
+  ideaInput.addEventListener('input', () => {
+    ideaCount.textContent = countWords(ideaInput.value);
+    updateLivePreview();
+  });
+  audienceInput.addEventListener('input', updateLivePreview);
+  goalInput.addEventListener('input', updateLivePreview);
+
+  /* ---------------- History & Favorites ---------------- */
+  function pushHistory(inputs, prompt) {
+    const hist = load(STORE.history, []);
+    hist.unshift({ id: 'h' + Date.now(), prompt, model: inputs.model, date: new Date().toISOString() });
+    save(STORE.history, hist.slice(0, 200));
+    renderHistoryList();
+  }
+
+  function formatDate(iso) {
+    try {
+      return new Date(iso).toLocaleString('ar-SA', { dateStyle: 'medium', timeStyle: 'short' });
+    } catch { return ''; }
+  }
+
+  function renderHistoryList() {
+    const key = state.historyView === 'history' ? STORE.history : STORE.favorites;
+    const items = load(key, []);
+    const list = $('#historyList');
+    const empty = $('#emptyState');
+    if (!items.length) {
+      list.innerHTML = '';
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+    list.innerHTML = items.map(item => `
+      <div class="history-item" data-id="${item.id}">
+        <span class="history-item__model">${MODELS.find(m => m.id === item.model)?.label || item.model}</span>
+        <span class="history-item__snippet">${escapeHtml(item.prompt.slice(0, 120))}</span>
+        <span class="history-item__date">${formatDate(item.date)}</span>
+        <span class="history-item__actions">
+          <button class="icon-sm-btn" data-act="copy" title="نسخ">⧉</button>
+          <button class="icon-sm-btn" data-act="load" title="تحميل في المُنشئ">↺</button>
+          <button class="icon-sm-btn" data-act="delete" title="حذف">✕</button>
+        </span>
+      </div>
+    `).join('');
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
+
+  $('#historyList').addEventListener('click', async (e) => {
+    const btn = e.target.closest('.icon-sm-btn');
+    if (!btn) return;
+    const row = e.target.closest('.history-item');
+    const id = row.dataset.id;
+    const key = state.historyView === 'history' ? STORE.history : STORE.favorites;
+    const items = load(key, []);
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+
+    if (btn.dataset.act === 'copy') {
+      try { await navigator.clipboard.writeText(item.prompt); showToast('تم النسخ'); } catch { showToast('تعذّر النسخ'); }
+    }
+    if (btn.dataset.act === 'delete') {
+      save(key, items.filter(i => i.id !== id));
+      renderHistoryList();
+      showToast('تم الحذف');
+    }
+    if (btn.dataset.act === 'load') {
+      const lines = item.prompt.split('\n');
+      ideaInput.value = lines.find(l => l && !l.startsWith('#')) || item.prompt;
+      ideaCount.textContent = countWords(ideaInput.value);
+      state.model = item.model;
+      renderModelGrid();
+      updateLivePreview();
+      goToStep(1);
+      $('#builder').scrollIntoView({ behavior: 'smooth' });
+      showToast('تم التحميل في المُنشئ');
+    }
+  });
+
+  $$('.history__tabs .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      state.historyView = tab.dataset.tab;
+      $$('.history__tabs .tab').forEach(t => t.classList.toggle('is-active', t === tab));
+      renderHistoryList();
+    });
+  });
+
+  $('#clearHistoryBtn').addEventListener('click', () => {
+    const key = state.historyView === 'history' ? STORE.history : STORE.favorites;
+    save(key, []);
+    renderHistoryList();
+    showToast('تم مسح القائمة');
+  });
+
+  /* ---------------- Library ---------------- */
+  const TAGS = Array.from(new Set(TEMPLATES.map(t => t.tag)));
+
+  function renderTagRow() {
+    const row = $('#tagRow');
+    row.innerHTML = `<button class="tag-chip ${!state.activeTag ? 'is-active' : ''}" data-tag="">الكل</button>` +
+      TAGS.map(tag => `<button class="tag-chip ${state.activeTag === tag ? 'is-active' : ''}" data-tag="${tag}">${tag}</button>`).join('');
+    $$('.tag-chip', row).forEach(chip => {
+      chip.addEventListener('click', () => {
+        state.activeTag = chip.dataset.tag || null;
+        renderTagRow();
+        renderTemplateGrid();
+      });
+    });
+  }
+
+  function renderTemplateGrid() {
+    const q = ($('#searchInput').value || '').trim().toLowerCase();
+    const grid = $('#templateGrid');
+    const filtered = TEMPLATES.filter(t => {
+      const matchesTag = !state.activeTag || t.tag === state.activeTag;
+      const matchesQuery = !q || (t.title + t.desc + t.tag).toLowerCase().includes(q);
+      return matchesTag && matchesQuery;
+    });
+
+    if (!filtered.length) {
+      grid.innerHTML = `<p class="empty-state">لا توجد نتائج مطابقة لبحثك.</p>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(t => `
+      <article class="template-card">
+        <div class="template-card__top">
+          <span class="template-card__icon">${t.icon}</span>
+          <span class="template-card__title">${t.title}</span>
+        </div>
+        <p class="template-card__desc">${t.desc}</p>
+        <div class="template-card__meta">
+          <span class="template-card__tag">${t.tag}</span>
+          <span>★ ${t.rating} · ${t.uses} استخدام</span>
+        </div>
+        <div class="template-card__footer">
+          <button class="btn btn--brass btn--sm" data-use="${t.id}" style="flex:1">استخدام</button>
+        </div>
+      </article>
+    `).join('');
+
+    $$('[data-use]', grid).forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tpl = TEMPLATES.find(x => x.id === btn.dataset.use);
+        ideaInput.value = tpl.idea;
+        ideaCount.textContent = countWords(tpl.idea);
+        state.model = tpl.model;
+        renderModelGrid();
+        updateLivePreview();
+        goToStep(1);
+        $('#builder').scrollIntoView({ behavior: 'smooth' });
+        showToast(`تم تحميل «${tpl.title}» في المُنشئ`);
+      });
+    });
+  }
+
+  $('#searchInput').addEventListener('input', renderTemplateGrid);
+
+  /* ---------------- Keyboard shortcuts ---------------- */
+  document.addEventListener('keydown', (e) => {
+    const mod = e.ctrlKey || e.metaKey;
+    if (mod && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      $('#library').scrollIntoView({ behavior: 'smooth' });
+      $('#searchInput').focus();
+    }
+    if (mod && e.key === 'Enter') {
+      e.preventDefault();
+      if (state.step !== 6) goToStep(6);
+      else generateOutput();
+      $('#builder').scrollIntoView({ behavior: 'smooth' });
+    }
+    if (mod && e.key.toLowerCase() === 'd') {
+      e.preventDefault();
+      toggleTheme();
+    }
+  });
+
+  /* ---------------- Init ---------------- */
+  function init() {
+    initTheme();
+    renderModelGrid();
+    renderTagRow();
+    renderTemplateGrid();
+    renderHistoryList();
+    goToStep(1);
+    updateLivePreview();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+
+</script>
+</body>
+</html>
