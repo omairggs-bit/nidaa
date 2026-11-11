@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>نداء — منصة عربية لبناء أوامر الذكاء الاصطناعي</title>
+  <meta name="description" content="نداء استوديو عربي لصياغة أوامر الذكاء الاصطناعي. عبّئ الحقول، واحصل على أمر جاهز للنسخ واللصق — دون اتصال بأي نموذج." />
+  <meta name="theme-color" content="#070B14" />
+  <meta property="og:title" content="نداء Nidaa" />
+  <meta property="og:description" content="منصة عربية لبناء أوامر الذكاء الاصطناعي" />
+  <meta property="og:locale" content="ar_AR" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230F1624'/%3E%3Crect x='7' y='13' width='3' height='6' rx='1.5' fill='%236EE7B7'/%3E%3Crect x='12' y='8' width='3' height='16' rx='1.5' fill='%236EE7B7'/%3E%3Crect x='17' y='11' width='3' height='10' rx='1.5' fill='%23818CF8'/%3E%3Crect x='22' y='14' width='3' height='4' rx='1.5' fill='%236EE7B7'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#studio" data-i18n="skip">تخطٍ إلى الاستوديو</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#studio" aria-label="نداء — الاستوديو">
+        <svg class="brand-mark" viewBox="0 0 32 32" width="36" height="36" aria-hidden="true">
+          <rect width="32" height="32" rx="9" fill="#151D2E" />
+          <rect x="0.6" y="0.6" width="30.8" height="30.8" rx="8.4" fill="none" stroke="#243049" />
+          <rect x="7" y="13" width="3" height="6" rx="1.5" fill="#6EE7B7" />
+          <rect x="12" y="8" width="3" height="16" rx="1.5" fill="#6EE7B7" />
+          <rect x="17" y="11" width="3" height="10" rx="1.5" fill="#818CF8" />
+          <rect x="22" y="14" width="3" height="4" rx="1.5" fill="#6EE7B7" />
+        </svg>
+        <span class="brand-text">
+          <span class="brand-name">نداء</span>
+          <span class="brand-latin">Nidaa</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="الأقسام">
+        <a href="#studio" data-i18n="nav.studio">الاستوديو</a>
+        <a href="#templates" data-i18n="nav.templates">القوالب</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="lang-toggle" id="lang-toggle" aria-label="Switch to English">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="workspace" id="studio">
+      <div class="workspace-intro">
+        <p class="eyebrow" data-i18n="studio.eyebrow">أداة صياغة — ليست نموذجاً لغوياً</p>
+        <h1 data-i18n="studio.title">ابنِ أمراً جاهزاً للصق</h1>
+        <p class="lead" data-i18n="studio.lead">عبّئ الحقول، وتابِع الأمر وهو يُبنى أمامك. انسخه ثم الصقه في أي نموذج تستخدمه. نداء لا يرسل طلبات إلى خدمات خارجية.</p>
+      </div>
+
+      <div class="workspace-grid">
+        <section class="panel builder" aria-labelledby="builder-title">
+          <header class="panel-head">
+            <div>
+              <h2 id="builder-title" data-i18n="builder.title">منشِئ الأمر</h2>
+              <p class="panel-sub" data-i18n="builder.sub">حدّد العناصر التالية ليُركَّب الأمر تلقائياً</p>
+            </div>
+            <p class="draft-status" id="draft-status" aria-live="polite"></p>
+          </header>
+
+          <form id="builder-form" autocomplete="off">
+            <div class="field-row">
+              <div class="field">
+                <label for="goal" data-i18n="field.goal">الهدف</label>
+                <select id="goal" name="goal">
+                  <option value="" data-i18n="field.goalPlaceholder">اختر الغرض</option>
+                  <option value="writing" data-i18n="goals.writing">كتابة</option>
+                  <option value="analysis" data-i18n="goals.analysis">تحليل</option>
+                  <option value="coding" data-i18n="goals.coding">برمجة</option>
+                  <option value="marketing" data-i18n="goals.marketing">تسويق</option>
+                  <option value="education" data-i18n="goals.education">تعليم</option>
+                  <option value="support" data-i18n="goals.support">خدمة عملاء</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="format" data-i18n="field.format">شكل المخرجات</label>
+                <select id="format" name="format">
+                  <option value="" data-i18n="field.formatPlaceholder">اختر الشكل</option>
+                  <option value="paragraph" data-i18n="formats.paragraph">فقرة</option>
+                  <option value="bullets" data-i18n="formats.bullets">نقاط</option>
+                  <option value="table" data-i18n="formats.table">جدول</option>
+                  <option value="json" data-i18n="formats.json">JSON</option>
+                  <option value="email" data-i18n="formats.email">بريد رسمي</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="role" data-i18n="field.role">الدور</label>
+              <p class="hint" id="role-hint" data-i18n="hint.role">من يكون النموذج؟ صِف الخبرة والأسلوب في جملة أو جملتين.</p>
+              <textarea id="role" name="role" rows="3" aria-describedby="role-hint" data-i18n-placeholder="ph.role" placeholder="مثال: مستشار تسويق رقمي بخبرة عشر سنوات في السوق السعودي."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="task" data-i18n="field.task">المهمة</label>
+              <p class="hint" id="task-hint" data-i18n="hint.task">المطلوب إنجازه بدقّة، بلا غموض.</p>
+              <textarea id="task" name="task" rows="4" aria-describedby="task-hint" data-i18n-placeholder="ph.task" placeholder="صف ما تريد أن يُنجَز، والنتيجة المتوقعة."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="context" data-i18n="field.context">السياق</label>
+              <p class="hint" id="context-hint" data-i18n="hint.context">خلفية الموقف: المنتج، المرحلة، الجمهور، أو أي تفصيل يغيّر الإجابة.</p>
+              <textarea id="context" name="context" rows="4" aria-describedby="context-hint" data-i18n-placeholder="ph.context" placeholder="معلومات خلفية يحتاجها النموذج ليفهم الموقف."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="constraints" data-i18n="field.constraints">القيود</label>
+              <p class="hint" id="constraints-hint" data-i18n="hint.constraints">ما يُمنع، وما يُلتزم به: الطول، اللغة، المحظورات، المصادر.</p>
+              <textarea id="constraints" name="constraints" rows="3" aria-describedby="constraints-hint" data-i18n-placeholder="ph.constraints" placeholder="مثال: لا تختلق أرقاماً. أبقِ النص أقل من 200 كلمة. استخدم العربية الفصحى."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="audience" data-i18n="field.audience">الجمهور</label>
+              <input id="audience" name="audience" type="text" data-i18n-placeholder="ph.audience" placeholder="من سيقرأ الناتج؟" />
+            </div>
+
+            <fieldset class="field tones">
+              <legend data-i18n="field.tones">النبرة</legend>
+              <p class="hint" data-i18n="hint.tones">يمكن اختيار أكثر من نبرة.</p>
+              <div class="chip-row" id="tone-chips" role="group" aria-label="النبرة"></div>
+            </fieldset>
+
+            <div class="builder-actions">
+              <button type="button" class="btn ghost" id="btn-clear" data-i18n="action.clear">مسح</button>
+            </div>
+          </form>
+        </section>
+
+        <div class="rail">
+          <section class="panel output-panel" aria-labelledby="output-title">
+            <header class="panel-head tight">
+              <div>
+                <h2 id="output-title" data-i18n="output.title">الأمر الجاهز</h2>
+                <p class="panel-sub" id="word-count"></p>
+              </div>
+              <div class="output-actions">
+                <button type="button" class="btn ghost icon-btn" id="btn-download" data-i18n-title="action.download" title="تحميل .txt">
+                  <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+                    <path d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5M4 16h12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <span data-i18n="action.download">تحميل .txt</span>
+                </button>
+                <button type="button" class="btn primary icon-btn" id="btn-copy" data-i18n-title="action.copy" title="نسخ الأمر">
+                  <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+                    <rect x="7" y="7" width="9" height="10" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6" />
+                    <path d="M13 7V5.6A1.6 1.6 0 0011.4 4H5.6A1.6 1.6 0 004 5.6v7.8A1.6 1.6 0 005.6 15H7" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  </svg>
+                  <span data-i18n="action.copy">نسخ الأمر</span>
+                </button>
+              </div>
+            </header>
+            <pre class="prompt-view" id="prompt-view" tabindex="0"><span class="prompt-empty" data-i18n="output.empty">ابدأ بتعبئة الحقول ليُبنى الأمر أمامك مباشرة.</span></pre>
+          </section>
+
+          <section class="panel preview-panel" aria-labelledby="preview-title">
+            <header class="panel-head tight">
+              <div>
+                <h2 id="preview-title" data-i18n="preview.title">معاينة الأمر</h2>
+                <p class="panel-sub" data-i18n="preview.note">محاكاة لأسلوب الرد حسب الهدف المختار — ليست استجابة من نموذج متصل.</p>
+              </div>
+            </header>
+            <div class="preview-card" id="preview-card">
+              <p class="preview-kicker" id="preview-kicker"></p>
+              <div class="preview-body" id="preview-body"></div>
+            </div>
+          </section>
+
+          <section class="panel templates-panel" id="templates" aria-labelledby="templates-title">
+            <header class="panel-head">
+              <div>
+                <h2 id="templates-title" data-i18n="templates.title">مكتبة القوالب</h2>
+                <p class="panel-sub" data-i18n="templates.lead">قالب جاهز يملأ الحقول. عدّل بعده بما يناسب حالتك.</p>
+              </div>
+            </header>
+            <div class="template-grid" id="template-grid"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-brand">نداء · Nidaa</p>
+    <p data-i18n="footer.line1">منصة عربية لبناء أوامر الذكاء الاصطناعي. الناتج أمر جاهز للصق، لا استدعاء لنماذج خارجية.</p>
+    <p class="footer-meta" data-i18n="footer.line2">قطعة معرض · تصميم وتنفيذ مستقل</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="mobile-bar" id="mobile-bar">
+    <span class="mobile-bar-meta" id="mobile-word-count"></span>
+    <button type="button" class="btn primary" id="btn-copy-mobile" data-i18n="action.copy">نسخ الأمر</button>
+  </div>
+
+  <noscript>
+    <p class="noscript">يعمل نداء بالجافاسكربت لتجميع الأمر وحفظ المسودة محلياً.</p>
+  </noscript>
+
+  <script src="app.js"></script>
+</body>
+</html>
